@@ -1,0 +1,30 @@
+@model AppProduct.Models.Product;
+@{
+    ViewData["Title"] = "Add Product";
+}
+
+<h2>Add Product</h2>
+<form asp-action="AddProduct" method="post" class="mt-4">
+    <div class="mb-3">
+        <label for="Name" class="form-label">Name</label>
+        <input asp-for="Name" class="form-control" placeholder="Enter the name" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label for="Description" class="form-label">Description</label>
+        <textarea asp-for="Description" class="form-control" placeholder="Enter the description"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label for="Price" class="form-label">Price</label>
+        <input asp-for="Price" class="form-control" placeholder="Enter the price" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label for="Category" class="form-label">Category</label>
+        <input asp-for="Category" class="form-control" placeholder="Enter the category" />
+        <span asp-validation-for="Category" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Add</button>
+
+</form>

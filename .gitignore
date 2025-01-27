@@ -1,0 +1,22 @@
+# Archivos de compilación
+bin/
+obj/
+Debug/
+Release/
+
+# Configuración del IDE
+.vs/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Archivos de dependencias
+project.lock.json
+project.fragment.lock.json
+*.log
+
+# Archivos generados por paquetes
+**/node_modules/
+**/npm-debug.log*
