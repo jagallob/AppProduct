@@ -8,6 +8,7 @@ AppProduct es una aplicación web desarrollada en .NET con C# que permite la ges
 - Creación de nuevos productos.
 - Edición de productos existentes.
 - Eliminación de productos.
+- Buscar productos
 - Uso de Entity Framework Core para la persistencia de datos.
 
 ## Estructura del proyecto
