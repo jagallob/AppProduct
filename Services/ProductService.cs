@@ -10,6 +10,7 @@ public interface IProductService
     void AddProduct(Product product);
     void UpdateProduct(Product product);
     void DeleteProduct(int id);
+    List<Product> SearchProduct(string query);
 }
 
 public class ProductService : IProductService
@@ -44,5 +45,14 @@ public class ProductService : IProductService
     public void DeleteProduct(int id)
     {
         _productRepository.DeleteProduct(id);
+    }
+
+    public List<Product> SearchProduct(string query)
+    {
+        if (string.IsNullOrWhiteSpace(query))
+        {
+            return new List<Product>();
+        }
+        return _productRepository.GetProducts().Where(p => p.Name.Contains(query, StringComparison.OrdinalIgnoreCase)).ToList();
     }
 }

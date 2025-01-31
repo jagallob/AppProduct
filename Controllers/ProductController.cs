@@ -82,4 +82,12 @@ public class ProductController : Controller
         return RedirectToAction("Index");
     }
 
+    // Search Products
+    [HttpGet]
+    public IActionResult SearchProduct(string query)
+    {
+        var products = _productService.SearchProduct(query);
+        return View(products);
+    }
+
 }
