@@ -1,58 +1,43 @@
 using AppProduct.Models;
 using AppProduct.Repositories;
 
-namespace AppProduct.Services;
-
-public interface IProductService
+namespace AppProduct.Services
 {
-    IEnumerable<Product> GetProducts();
-    Product? GetProductById(int id);
-    void AddProduct(Product product);
-    void UpdateProduct(Product product);
-    void DeleteProduct(int id);
-    List<Product> SearchProduct(string query);
-}
 
-public class ProductService : IProductService
-{
-    private readonly IProductRepository _productRepository;
-
-    public ProductService(IProductRepository productRepository)
+    public class ProductService : IProductService
     {
-        _productRepository = productRepository;
-    }
+        private readonly IProductRepository _productRepository;
 
-    public IEnumerable<Product> GetProducts()
-    {
-        return _productRepository.GetProducts();
-    }
-
-    public Product? GetProductById(int id)
-    {
-        return _productRepository.GetProductById(id);
-    }
-
-    public void AddProduct(Product product)
-    {
-        _productRepository.AddProduct(product);
-    }
-
-    public void UpdateProduct(Product product)
-    {
-        _productRepository.UpdateProduct(product);
-    }
-
-    public void DeleteProduct(int id)
-    {
-        _productRepository.DeleteProduct(id);
-    }
-
-    public List<Product> SearchProduct(string query)
-    {
-        if (string.IsNullOrWhiteSpace(query))
+        public ProductService(IProductRepository productRepository)
         {
-            return new List<Product>();
+            _productRepository = productRepository;
         }
-        return _productRepository.GetProducts().Where(p => p.Name.Contains(query, StringComparison.OrdinalIgnoreCase)).ToList();
+
+        public async Task <IEnumerable<Product>> GetProducts() => await _productRepository.GetProducts();
+        
+
+        public async Task <Product?> GetProductById(int id) => await _productRepository.GetProductById(id);
+       
+
+        public async Task  AddProduct(Product product) => await _productRepository.AddProduct(product);
+        
+
+        public async Task UpdateProduct(Product product) => await _productRepository.UpdateProduct(product);
+       
+
+        public async Task  DeleteProduct(int id) => await _productRepository.DeleteProduct(id);
+   
+
+        public async Task<List<Product>> SearchProduct(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return new List<Product>();
+            }
+
+            var products = await _productRepository.GetProducts();
+            return products.Where(p => p.Name.Contains(query, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
     }
 }
+

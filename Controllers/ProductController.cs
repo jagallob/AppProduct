@@ -2,92 +2,84 @@
 using AppProduct.Models;
 using AppProduct.Services;
 
-namespace AppProduct.Controllers;
-
-public class ProductController : Controller
+namespace AppProduct.Controllers
 {
-    private readonly IProductService _productService;
+    [ApiController]
+    [Route("/api/products")]
 
-    public ProductController(IProductService productService)
+    public class ProductController : ControllerBase
     {
-        _productService = productService;
-    }
+        private readonly IProductService _productService;
 
-    public IActionResult Index()
-    {
-        var products = _productService.GetProducts();
-        return View(products);
-    }
-
-    [HttpGet]
-    public IActionResult AddProduct()
-    {
-        return View();
-    }
-
-    [HttpPost]
-    public IActionResult AddProduct(Product product)
-    {
-        if (ModelState.IsValid)
+        public ProductController(IProductService productService)
         {
-            _productService.AddProduct(product);
-            return RedirectToAction("Index");
+            _productService = productService;
         }
-        return View(product);
-    }
 
-    // Edit Product Actions
-    [HttpGet]
-    public IActionResult EditProduct(int id)
-    {
-        var product = _productService.GetProductById(id);
-        if (product == null)
+        [HttpGet]
+        public async Task<IActionResult> GetAllProducts()
         {
-            return NotFound($"No product found with ID {id}");
+            var products = await _productService.GetProducts();
+            return Ok(products);
         }
-        return View(product);
-    }
 
-    [HttpPost]
-    public IActionResult EditProduct(Product product)
-    {
-        if (ModelState.IsValid)
+        // Search Products
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchProduct([FromQuery] string query)
         {
-            _productService.UpdateProduct(product);
-            return RedirectToAction("Index");
+            var products = await _productService.SearchProduct(query);
+            return Ok(products);
         }
-        return View(product);
-    }
 
-    // Delete Product Actions
-    [HttpGet]
-    public IActionResult DeleteProduct(int id)
-    {
-        var product = _productService.GetProductById(id);
-        if (product == null)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProductById(int id)
         {
-            return NotFound($"No product found with ID {id}");
+            var product = await _productService.GetProductById(id);
+            if (product == null)
+            {
+                return NotFound($"No product found with ID {id}");
+            }
+            return Ok(product);
         }
-        return View(product);
-    }
 
-    [HttpPost, ActionName("DeleteProduct")]
-    public IActionResult DeleteConfirmed(int id)
-    {
-        var product = _productService.GetProductById(id);
-        if (product != null)
+   
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProduct([FromBody] Product product)
         {
-            _productService.DeleteProduct(id);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            await _productService.AddProduct(product);
+            return CreatedAtAction(nameof(GetProductById), new { id = product.Id }, product);
         }
-        return RedirectToAction("Index");
-    }
 
-    // Search Products
-    [HttpGet]
-    public IActionResult SearchProduct(string query)
-    {
-        var products = _productService.SearchProduct(query);
-        return View(products);
-    }
+        // Edit Product Actions
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateProduct(int id, [FromBody] Product product)
+        {
+            if (!ModelState.IsValid || id != product.Id)
+            {
+                return BadRequest($"No product found with ID {id}");
+            }
+            await _productService.UpdateProduct(product);
+            return NoContent();
+        }
 
+
+        // Delete Product Actions
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            var product = await _productService.GetProductById(id);
+            if (product == null)
+            {
+                return NotFound($"No product found with ID {id}");
+            }
+            await _productService.DeleteProduct(id);
+            return NoContent();
+        }
+
+    }
 }

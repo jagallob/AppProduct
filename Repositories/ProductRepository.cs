@@ -2,59 +2,47 @@ using AppProduct.Data;
 using AppProduct.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace AppProduct.Repositories;
-
-public interface IProductRepository
+namespace AppProduct.Repositories
 {
-    IEnumerable<Product> GetProducts();
-    Product? GetProductById(int id);
-    void AddProduct(Product product);
-    void UpdateProduct(Product product);
-    void DeleteProduct(int id);
-}
 
-public class ProductRepository : IProductRepository
-{
-    private readonly AppDbContext _context;
-
-    public ProductRepository(AppDbContext context)
+    public class ProductRepository : IProductRepository
     {
-        _context = context;
-    }
+        private readonly AppDbContext _context;
 
-    public IEnumerable<Product> GetProducts()
-    {
-        return _context.Products.ToList();
-    }
-
-    public Product? GetProductById(int id)
-    {
-        return _context.Products.FirstOrDefault(p => p.Id == id);
-    }
-
-    public void AddProduct(Product product)
-    {
-        _context.Products.Add(product);
-        _context.SaveChanges();
-    }
-
-    public void UpdateProduct(Product product)
-    {
-        var existingProduct = _context.Products.Find(product.Id);
-        if (existingProduct != null)
+        public ProductRepository(AppDbContext context)
         {
-            _context.Entry(existingProduct).CurrentValues.SetValues(product);
-            _context.SaveChanges();
+            _context = context;
         }
-    }
 
-    public void DeleteProduct(int id)
-    {
-        var product = _context.Products.Find(id);
-        if (product != null)
+        public async Task<IEnumerable<Product>> GetProducts() => await _context.Products.Include(p => p.Category).Include(p => p.ProductDetail).ToListAsync();
+        
+        public async Task<Product?> GetProductById(int id) => await _context.Products.Include(p => p.Category).Include(p => p.ProductDetail).FirstOrDefaultAsync(p => p.Id == id);
+     
+
+        public async Task AddProduct(Product product)
         {
-            _context.Products.Remove(product);
-            _context.SaveChanges();
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateProduct(Product product)
+        {
+            var existingProduct = _context.Products.Find(product.Id);
+            if (existingProduct != null)
+            {
+                _context.Entry(existingProduct).CurrentValues.SetValues(product);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteProduct(int id)
+        {
+            var product = _context.Products.Find(id);
+            if (product != null)
+            {
+                _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }
