@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using AppProduct.Data;
 using AppProduct.Repositories;
 using AppProduct.Services;
@@ -16,7 +17,11 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 
 // Controllers
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options => 
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+});
 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
@@ -43,6 +48,11 @@ else
 app.UseHttpsRedirection();
 
 app.UseRouting();
+app.UseCors(policy =>
+    policy.AllowAnyOrigin()
+          .AllowAnyMethod()
+          .AllowAnyHeader());
+
 app.UseAuthentication();
 app.UseAuthorization();
 

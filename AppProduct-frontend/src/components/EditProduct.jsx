@@ -1,0 +1,75 @@
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import apiClient from "../api";
+
+function EditProduct() {
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    apiClient
+      .get(`/products/${id}`)
+      .then((response) => setProduct(response.data))
+      .catch((error) => console.error("Error fetching product:", error));
+  }, [id]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    apiClient
+      .put(`/products/${id}`)
+      .then(() => {
+        alert("Product update successfully");
+        navigate("/");
+      })
+      .catch((error) => console.error("Error updating product"));
+  };
+
+  return (
+    <div>
+      <h1>Edit Product</h1>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-3">
+          <label>Name:</label>
+          <input
+            type="text"
+            value={product.name}
+            onChange={(e) => setProduct({ ...product, name: e.target.value })}
+            className="form-control"
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label>Price:</label>
+          <input
+            type="number"
+            step="0.01"
+            value={product.price}
+            onChange={(e) =>
+              setProduct({ ...product, price: parseFloat(e.target.value) })
+            }
+            className="form-control"
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label>Category:</label>
+          <input
+            type="number"
+            value={product.categoryId}
+            onChange={(e) =>
+              setProduct({ ...product, categoryId: parseInt(e.target.value) })
+            }
+            className="form-control"
+            required
+          />
+        </div>
+        <button type="submit" className="btn btn-primary">
+          Save Changes
+        </button>
+      </form>
+    </div>
+  );
+}
+
+export default EditProduct;

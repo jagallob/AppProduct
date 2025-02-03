@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace AppProduct.Models
 {
@@ -18,7 +19,8 @@ namespace AppProduct.Models
 
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
-        public required Category Category { get; set; }
+
+        public Category Category { get; set; } = null;
 
         public ProductDetail ProductDetail { get; set; } = null!;
 
