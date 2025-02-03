@@ -33,7 +33,7 @@ function ProductList() {
           Search Product
         </Link>
       </div>
-      <table className="table table-bordered">
+      <table className="table table-bordered table-striped">
         <thead className="table-dark">
           <tr>
             <th>Name</th>
