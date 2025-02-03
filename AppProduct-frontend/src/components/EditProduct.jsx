@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import apiClient from "../api";
 
@@ -17,13 +17,18 @@ function EditProduct() {
   const handleSubmit = (e) => {
     e.preventDefault();
     apiClient
-      .put(`/products/${id}`)
+      .put(`/products/${id}`, product)
       .then(() => {
         alert("Product update successfully");
         navigate("/");
       })
-      .catch((error) => console.error("Error updating product"));
+      .catch((error) => {
+        console.error("Error updating product", error);
+        alert("Error updating product");
+      });
   };
+
+  if (!product) return <p>Loading...</p>;
 
   return (
     <div>
@@ -33,7 +38,7 @@ function EditProduct() {
           <label>Name:</label>
           <input
             type="text"
-            value={product.name}
+            value={product.name || ""}
             onChange={(e) => setProduct({ ...product, name: e.target.value })}
             className="form-control"
             required
@@ -44,9 +49,9 @@ function EditProduct() {
           <input
             type="number"
             step="0.01"
-            value={product.price}
+            value={product.price || ""}
             onChange={(e) =>
-              setProduct({ ...product, price: parseFloat(e.target.value) })
+              setProduct({ ...product, price: parseFloat(e.target.value) || 0 })
             }
             className="form-control"
             required
@@ -56,9 +61,12 @@ function EditProduct() {
           <label>Category:</label>
           <input
             type="number"
-            value={product.categoryId}
+            value={product.categoryId || ""}
             onChange={(e) =>
-              setProduct({ ...product, categoryId: parseInt(e.target.value) })
+              setProduct({
+                ...product,
+                categoryId: parseInt(e.target.value) || 0,
+              })
             }
             className="form-control"
             required

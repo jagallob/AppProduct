@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import apiClient from "../api";
 
@@ -23,13 +23,18 @@ function ProductList() {
   };
 
   return (
-    <div>
+    <div className="container">
       <h1>Product List</h1>
-      <Link to="/add" className="btn btn-success mb-3">
-        Add Product
-      </Link>
-      <table className="table">
-        <thead>
+      <div className="d-flex gap-2 mb-3">
+        <Link to="/add" className="btn btn-success mb-3">
+          Add Product
+        </Link>
+        <Link to="/search" className="btn btn-primary mb-3">
+          Search Product
+        </Link>
+      </div>
+      <table className="table table-bordered">
+        <thead className="table-dark">
           <tr>
             <th>Name</th>
             <th>Description</th>
@@ -46,18 +51,20 @@ function ProductList() {
               <td>{product.price}</td>
               <td>{product.category?.name || "N/A"}</td>
               <td>
-                <Link
-                  to={`/edit/${product.id}`}
-                  className="btn btn-warning btn-sm"
-                >
-                  Edit
-                </Link>
-                <button
-                  onClick={() => deleteProduct(product.id)}
-                  className="btn btn-danger btn-sm ms-2"
-                >
-                  Delete
-                </button>
+                <div className="d-flex gap-2">
+                  <Link
+                    to={`/edit/${product.id}`}
+                    className="btn btn-warning btn-sm"
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    onClick={() => deleteProduct(product.id)}
+                    className="btn btn-danger btn-sm ms-2"
+                  >
+                    Delete
+                  </button>
+                </div>
               </td>
             </tr>
           ))}
