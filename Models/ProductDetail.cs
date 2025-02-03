@@ -17,7 +17,7 @@ namespace AppProduct.Models
 
         public int Stock {  get; set; } = 0;
 
-        [Column(TypeName = "decimal(10,2")]
+        [Column(TypeName = "decimal(10,2)")]
         public decimal? Weight { get; set; }
 
         public string? Dimensions { get; set; }

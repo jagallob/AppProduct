@@ -35,7 +35,7 @@ namespace AppProduct.Migrations
                     Price = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
                     CategoryId = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true)
+                    Description = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -57,7 +57,7 @@ namespace AppProduct.Migrations
                     ProductId = table.Column<int>(type: "integer", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
                     Stock = table.Column<int>(type: "integer", nullable: false),
-                    Weight = table.Column<decimal>(type: "decimal(10,2", nullable: true),
+                    Weight = table.Column<decimal>(type: "numeric(10,2)", nullable: true),
                     Dimensions = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>

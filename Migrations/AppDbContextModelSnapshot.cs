@@ -55,6 +55,7 @@ namespace AppProduct.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
@@ -94,7 +95,7 @@ namespace AppProduct.Migrations
                         .HasColumnType("integer");
 
                     b.Property<decimal?>("Weight")
-                        .HasColumnType("decimal(10,2");
+                        .HasColumnType("decimal(10,2)");
 
                     b.HasKey("Id");
 

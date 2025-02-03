@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AppProduct.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250202055836_InitialCreate")]
+    [Migration("20250202233344_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -58,6 +58,7 @@ namespace AppProduct.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
@@ -97,7 +98,7 @@ namespace AppProduct.Migrations
                         .HasColumnType("integer");
 
                     b.Property<decimal?>("Weight")
-                        .HasColumnType("decimal(10,2");
+                        .HasColumnType("decimal(10,2)");
 
                     b.HasKey("Id");
 
