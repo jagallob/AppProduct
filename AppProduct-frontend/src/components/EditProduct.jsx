@@ -16,15 +16,38 @@ function EditProduct() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!product.name || !product.price || !product.categoryId) {
+      alert("All fields are required.");
+      return;
+    }
+
+    const updatedProduct = {
+      id: parseInt(id),
+      name: product.name,
+      price: parseFloat(parseFloat(product.price).toFixed(2)),
+      categoryId: parseInt(product.categoryId),
+      description: product.description || "",
+    };
+
+    console.log("Sending product data:", updatedProduct);
+
     apiClient
-      .put(`/products/${id}`, product)
+      .put(`/products/${id}`, updatedProduct)
       .then(() => {
         alert("Product update successfully");
         navigate("/");
       })
       .catch((error) => {
-        console.error("Error updating product", error);
-        alert("Error updating product");
+        console.error("Error updating product:", error);
+        if (error.response && error.response.data.errors) {
+          const errorMessages = Object.values(error.response.data.errors)
+            .flat()
+            .join("\n");
+          alert(`Validation errors:\n${errorMessages}`);
+        } else {
+          alert("An unexpected error occurred. Please try again later.");
+        }
       });
   };
 
@@ -58,7 +81,7 @@ function EditProduct() {
           />
         </div>
         <div className="mb-3">
-          <label>Category:</label>
+          <label>Category ID:</label>
           <input
             type="number"
             value={product.categoryId || ""}
@@ -70,6 +93,16 @@ function EditProduct() {
             }
             className="form-control"
             required
+          />
+        </div>
+        <div className="mb-3">
+          <label>Description (optional):</label>
+          <textarea
+            value={product.description || ""}
+            onChange={(e) =>
+              setProduct({ ...product, description: e.target.value })
+            }
+            className="form-control"
           />
         </div>
         <button type="submit" className="btn btn-primary">

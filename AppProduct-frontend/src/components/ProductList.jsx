@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import apiClient from "../api";
+import deleteProduct from "./DeleteProduct";
 
 function ProductList() {
   const [products, setProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 7;
+  const [showModal, setShowModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
     apiClient
@@ -12,15 +17,31 @@ function ProductList() {
       .catch((error) => console.error("Error fetching products:", error));
   }, []);
 
-  const deleteProduct = (id) => {
-    apiClient
-      .delete(`/products/${id}`)
-      .then(() => {
-        setProducts(products.filter((p) => p.id !== id));
-        alert("Product deleted successfully!");
-      })
-      .catch((error) => console.error("Error deleting product:", error));
+  const confirmDelete = (product) => {
+    setSelectedProduct(product);
+    setShowModal(true);
   };
+
+  const handleDelete = () => {
+    if (selectedProduct) {
+      deleteProduct(selectedProduct.id, products, setProducts);
+      setShowModal(false);
+    }
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedProduct(null);
+  };
+
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = products.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="container">
@@ -44,7 +65,7 @@ function ProductList() {
           </tr>
         </thead>
         <tbody>
-          {products.map((product) => (
+          {currentProducts.map((product) => (
             <tr key={product.id}>
               <td>{product.name}</td>
               <td>{product.description}</td>
@@ -59,7 +80,7 @@ function ProductList() {
                     Edit
                   </Link>
                   <button
-                    onClick={() => deleteProduct(product.id)}
+                    onClick={() => confirmDelete(product)}
                     className="btn btn-danger btn-sm ms-2"
                   >
                     Delete
@@ -70,6 +91,66 @@ function ProductList() {
           ))}
         </tbody>
       </table>
+
+      <nav>
+        <ul className="pagination">
+          {Array.from(
+            { length: Math.ceil(products.length / productsPerPage) },
+            (_, i) => (
+              <li
+                key={i}
+                className={`page-item ${currentPage === i + 1 ? "active" : ""}`}
+              >
+                <button onClick={() => paginate(i + 1)} className="page-link">
+                  {i + 1}
+                </button>
+              </li>
+            )
+          )}
+        </ul>
+      </nav>
+
+      {showModal && (
+        <div
+          className="modal fade show"
+          style={{ display: "block", backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+        >
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal.title">Confirm Deletion</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={closeModal}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <p>
+                  Are you sure you want to delete{" "}
+                  <strong>{selectedProduct?.name}</strong>
+                </p>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secundary"
+                  onClick={closeModal}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={handleDelete}
+                >
+                  Yes, Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
