@@ -59,10 +59,21 @@ namespace AppProduct.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProduct(int id, [FromBody] Product product)
         {
-            if (!ModelState.IsValid || id != product.Id)
+            if (!ModelState.IsValid)
             {
-                return BadRequest($"No product found with ID {id}");
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+                return BadRequest(new { message = "Validation failed", errors });
             }
+
+            if (id != product.Id)
+            {
+
+                return BadRequest("ID mismatch");
+            }
+
             await _productService.UpdateProduct(product);
             return NoContent();
         }

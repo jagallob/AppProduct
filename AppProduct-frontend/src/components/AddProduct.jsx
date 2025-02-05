@@ -7,7 +7,7 @@ function AddProduct() {
     name: "",
     description: "",
     price: 0,
-    categoryId: 1,
+    categoryId: 0,
     productDetail: {
       description: "",
       stock: 0,
@@ -79,8 +79,11 @@ function AddProduct() {
             required
           />
         </div>
+
+        <h3>Product detail:</h3>
+
         <div className="mb-3">
-          <label>Product detail:</label>
+          <label>Description:</label>
           <textarea
             value={product.productDetail.description}
             onChange={(e) =>
@@ -114,6 +117,43 @@ function AddProduct() {
             required
           />
         </div>
+        <div className="mb-3">
+          <label>Weight:</label>
+          <textarea
+            type="number"
+            step="0.01"
+            value={product.productDetail.weight || ""}
+            onChange={(e) =>
+              setProduct({
+                ...product,
+                productDetail: {
+                  ...product.productDetail,
+                  weight: e.target.value,
+                },
+              })
+            }
+            className="form-control"
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label>Dimensions:</label>
+          <textarea
+            type="text"
+            value={product.productDetail.dimensions}
+            onChange={(e) =>
+              setProduct({
+                ...product,
+                productDetail: {
+                  ...product.productDetail,
+                  dimensions: e.target.value,
+                },
+              })
+            }
+            className="form-control"
+          />
+        </div>
+
         <button type="submit" className="btn btn-primary">
           Add Product
         </button>

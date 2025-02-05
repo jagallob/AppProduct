@@ -10,7 +10,7 @@ namespace AppProduct.Models
 
         [ForeignKey("Product")]
         public int ProductId { get; set; }
-        public Product Product { get; set; } = null!;
+        public Product? Product { get; set; }
 
         [Required]
         public string Description { get; set; } = string.Empty;

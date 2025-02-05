@@ -1,10 +1,7 @@
 using AppProduct.Models;
-using AppProduct.Repositories;
 
 namespace AppProduct.Services
 {
-
-
     public interface IProductService
     {
         Task <IEnumerable<Product>> GetProducts();
@@ -12,6 +9,6 @@ namespace AppProduct.Services
         Task AddProduct(Product product);
         Task UpdateProduct(Product product);
         Task DeleteProduct(int id);
-        Task <List<Product>> SearchProduct(string query);
+        Task <IEnumerable<Product>> SearchProduct(string query);
     }
 }

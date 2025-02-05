@@ -12,6 +12,7 @@ namespace AppProduct.Models
 
         [Required, MaxLength(255)]
         public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
 
         [Required]
         [Column(TypeName = "decimal(10,2)")]
@@ -20,15 +21,12 @@ namespace AppProduct.Models
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
 
-        public Category Category { get; set; } = null;
+        public Category? Category { get; set; } 
 
-        public ProductDetail ProductDetail { get; set; } = null!;
+        [JsonIgnore]
+        public ProductDetail? ProductDetail { get; set; } 
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        public string Description { get; set; } = string.Empty;
-
-
 
     }
 }
