@@ -21,7 +21,13 @@ namespace AppProduct.Repositories
 
         public async Task AddProduct(Product product)
         {
-            _context.Products.Add(product);
+            if (product.ProductDetail != null)
+            {
+                product.ProductDetail.ProductId = product.Id;
+                _context.ProductDetails.Add(product.ProductDetail);
+            }
+
+            await _context.Products.AddAsync(product);
             await _context.SaveChangesAsync();
         }
 

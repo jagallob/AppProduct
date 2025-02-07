@@ -23,6 +23,7 @@ function AddProduct() {
     apiClient
       .post("/products", product)
       .then(() => {
+        console.log("Product sent to backend:", product);
         alert("Product added successfully!");
         navigate("/");
       })
@@ -119,7 +120,7 @@ function AddProduct() {
         </div>
         <div className="mb-3">
           <label>Weight:</label>
-          <textarea
+          <input
             type="number"
             step="0.01"
             value={product.productDetail.weight || ""}

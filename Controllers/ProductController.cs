@@ -43,7 +43,6 @@ namespace AppProduct.Controllers
         }
 
    
-
         [HttpPost]
         public async Task<IActionResult> CreateProduct([FromBody] Product product)
         {

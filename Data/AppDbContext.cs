@@ -1,7 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using AppProduct.Models;
-using System.Net.Http.Headers;
-using AspNetCoreGeneratedDocument;
 
 namespace AppProduct.Data
 {
